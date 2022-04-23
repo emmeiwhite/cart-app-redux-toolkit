@@ -4,8 +4,8 @@ import cartItems from "./../../cartItems";
 const initialState = {
   cartItems: cartItems,
   isLoading: false,
-  itemsInCart: 10,
-  totalAmout: 340,
+  itemsInCart: 0,
+  totalAmount: 0,
 };
 
 const cartSlice = createSlice({
@@ -38,8 +38,27 @@ const cartSlice = createSlice({
         return item;
       });
     },
+
+    calculateTotals: (state) => {
+      const { totalAmount, itemsInCart } = state.cartItems.reduce(
+        (totals, cartItem) => {
+          const { price, amount } = cartItem;
+          totals.totalAmount += price * amount;
+          totals.itemsInCart += amount;
+          return totals;
+        },
+        {
+          totalAmount: 0,
+          itemsInCart: 0,
+        }
+      );
+
+      state.totalAmount = totalAmount;
+      state.itemsInCart = itemsInCart;
+    },
   },
 });
 
-export const { clearCart, removeItem, increase, decrease } = cartSlice.actions;
+export const { clearCart, removeItem, increase, decrease, calculateTotals } =
+  cartSlice.actions;
 export default cartSlice.reducer;

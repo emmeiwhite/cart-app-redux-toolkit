@@ -1,12 +1,20 @@
 import CartItem from "./CartItem";
 import { useDispatch, useSelector } from "react-redux";
 import { clearCart } from "./../features/cart/cartSlice";
+import { useEffect } from "react";
+import { calculateTotals } from "./../features/cart/cartSlice";
 
 function CartContainer() {
   const dispatch = useDispatch();
-  const { cartItems, totalAmout } = useSelector((store) => {
+  const { cartItems, totalAmount } = useSelector((store) => {
     return store.cart;
   });
+
+  // Whenever cartItems updates, global state updates
+  useEffect(() => {
+    dispatch(calculateTotals());
+  }, [cartItems]);
+
   if (cartItems.length < 1) {
     return (
       <section className="cart">
@@ -33,7 +41,7 @@ function CartContainer() {
         <hr />
         <div className="cart-total">
           <h4>
-            total <span>$ {totalAmout}</span>
+            total <span>$ {totalAmount}</span>
           </h4>
         </div>
 
