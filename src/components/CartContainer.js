@@ -1,19 +1,12 @@
 import CartItem from "./CartItem";
 import { useDispatch, useSelector } from "react-redux";
-import { clearCart } from "./../features/cart/cartSlice";
-import { useEffect } from "react";
-import { calculateTotals } from "./../features/cart/cartSlice";
+import { openModal } from "./../features/modal/modalSlice";
 
 function CartContainer() {
   const dispatch = useDispatch();
   const { cartItems, totalAmount } = useSelector((store) => {
     return store.cart;
   });
-
-  // Whenever cartItems updates, global state updates
-  useEffect(() => {
-    dispatch(calculateTotals());
-  }, [cartItems]);
 
   if (cartItems.length < 1) {
     return (
@@ -41,12 +34,17 @@ function CartContainer() {
         <hr />
         <div className="cart-total">
           <h4>
-            total <span>$ {totalAmount}</span>
+            total <span>${parseFloat(totalAmount.toFixed(2))}</span>
           </h4>
         </div>
 
         {/* We are dispatching an action  */}
-        <button className="btn clear-btn" onClick={() => dispatch(clearCart())}>
+        <button
+          className="btn clear-btn"
+          onClick={() => {
+            dispatch(openModal());
+          }}
+        >
           clear cart
         </button>
       </footer>
